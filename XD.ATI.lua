@@ -345,16 +345,21 @@ end
 
 local function findAndApplyPackage(input)
     input = input:lower()
+    local found = false
 
     for name, package in pairs(animationPackages) do
-        if name:lower():find(input) then
+        if name:lower():sub(1, #input) == input then
             applyAnimationPackage(name, package)
-            return
+            found = true
+            break
         end
     end
 
-    print("No se encontró un paquete de animación con ese nombre.")
+    if not found then
+        print("No se encontró un paquete de animación con ese nombre.")
+    end
 end
 
-local packageName = "" 
+local packageName = " "
+
 findAndApplyPackage(packageName)
