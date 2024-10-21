@@ -322,7 +322,11 @@ local animationPackages = {
     }
 }    
 
-local function applyAnimationPackage(packageName, package)
+getgenv().packageName = "Ad" -- Cambia el prefijo aquí
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/ANDERSONgg25/ATI/main/XD.ATI.lua"))()
+
+local function applyAnimationPackage(name, package)
     local player = game.Players.LocalPlayer
     local character = player.Character or player.CharacterAdded:Wait()
     local animateScript = character:WaitForChild("Animate")
@@ -330,36 +334,24 @@ local function applyAnimationPackage(packageName, package)
     animateScript.climb.ClimbAnim.AnimationId = package.climb
     animateScript.fall.FallAnim.AnimationId = package.fall
     animateScript.idle.Animation1.AnimationId = package.idle1
-
-    if package.idle2 then
-        animateScript.idle.Animation2.AnimationId = package.idle2
-    end
-
+    if package.idle2 then animateScript.idle.Animation2.AnimationId = package.idle2 end
     animateScript.jump.JumpAnim.AnimationId = package.jump
     animateScript.run.RunAnim.AnimationId = package.run
     animateScript.swim.Swim.AnimationId = package.swim
     animateScript.walk.WalkAnim.AnimationId = package.walk
 
-    print("Paquete de animación aplicado: " .. packageName)
+    print("Paquete de animación aplicado: " .. name)
 end
 
 local function findAndApplyPackage(input)
     input = input:lower()
-    local found = false
-
     for name, package in pairs(animationPackages) do
         if name:lower():sub(1, #input) == input then
             applyAnimationPackage(name, package)
-            found = true
-            break
+            return
         end
     end
-
-    if not found then
-        print("No se encontró un paquete de animación con ese nombre.")
-    end
+    print("No se encontró un paquete de animación con ese nombre.")
 end
 
-local packageName = " "
-
-findAndApplyPackage(packageName)
+findAndApplyPackage(getgenv().packageName)
