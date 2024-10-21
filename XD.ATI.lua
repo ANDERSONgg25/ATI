@@ -322,10 +322,6 @@ local animationPackages = {
     }
 }    
 
-getgenv().packageName = "Ad" -- Cambia el prefijo aquí
-
-loadstring(game:HttpGet("https://raw.githubusercontent.com/ANDERSONgg25/ATI/main/XD.ATI.lua"))()
-
 local function applyAnimationPackage(name, package)
     local player = game.Players.LocalPlayer
     local character = player.Character or player.CharacterAdded:Wait()
