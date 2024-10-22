@@ -322,28 +322,11 @@ local animationPackages = {
     }
 }    
 
-local function levenshtein(s1, s2)
-    local len1, len2 = #s1, #s2
-    local matrix = {}
-    for i = 0, len1 do matrix[i] = { [0] = i } end
-    for j = 0, len2 do matrix[0][j] = j end
-    for i = 1, len1 do
-        for j = 1, len2 do
-            local cost = (s1:sub(i, i) == s2:sub(j, j)) and 0 or 1
-            matrix[i][j] = math.min(
-                matrix[i - 1][j] + 1,
-                matrix[i][j - 1] + 1,
-                matrix[i - 1][j - 1] + cost
-            )
-        end
-    end
-    return matrix[len1][len2]
-end
-
 local function applyAnimationPackage(name, package)
     local player = game.Players.LocalPlayer
     local character = player.Character or player.CharacterAdded:Wait()
     local animateScript = character:WaitForChild("Animate")
+
     animateScript.climb.ClimbAnim.AnimationId = package.climb
     animateScript.fall.FallAnim.AnimationId = package.fall
     animateScript.idle.Animation1.AnimationId = package.idle1
@@ -352,23 +335,19 @@ local function applyAnimationPackage(name, package)
     animateScript.run.RunAnim.AnimationId = package.run
     animateScript.swim.Swim.AnimationId = package.swim
     animateScript.walk.WalkAnim.AnimationId = package.walk
+
     print("Paquete de animación aplicado: " .. name)
 end
 
-local function findBestMatch(input)
+local function findAndApplyPackage(input)
     input = input:lower()
-    local bestMatch, minDistance = nil, math.huge
     for name, package in pairs(animationPackages) do
-        local distance = levenshtein(input, name:lower())
-        if distance < minDistance then
-            bestMatch, minDistance = {name = name, package = package}, distance
+        if name:lower():sub(1, #input) == input then
+            applyAnimationPackage(name, package)
+            return
         end
     end
-    if bestMatch then
-        applyAnimationPackage(bestMatch.name, bestMatch.package)
-    else
-        print("No se encontró un paquete adecuado para: " .. input)
-    end
+    print("No se encontró un paquete de animación con ese nombre.")
 end
 
-findBestMatch(getgenv().packageName)
+findAndApplyPackage(getgenv().packageName)
