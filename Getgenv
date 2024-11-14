@@ -1,0 +1,56 @@
+getgenvs().teleEnabled = false
+getgenvs().bringEnabled = false
+getgenvs().loopConnection = nil
+
+local player = game.Players.LocalPlayer
+local humanoidRootPart = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+local runService = game:GetService("RunService")
+
+local function activateProximityPrompt(object)
+    for _, proximityPrompt in pairs(object:GetDescendants()) do
+        if proximityPrompt:IsA("ProximityPrompt") then
+            fireproximityprompt(proximityPrompt)
+        end
+    end
+end
+
+local function bringObjectsToPlayer()
+    if humanoidRootPart then
+        for _, obj in pairs(workspace:GetChildren()) do
+            if obj.Name == "Pray" or obj.Name == "GwaGwa" then
+                obj.CFrame = humanoidRootPart.CFrame * CFrame.new(0, 9, 0)
+                activateProximityPrompt(obj)
+            end
+        end
+    end
+end
+
+local function teleportToPosition(destination)
+    local character = player.Character
+    local humanoidRootPart = character and character:FindFirstChild("HumanoidRootPart")
+    
+    if humanoidRootPart then
+        humanoidRootPart.Anchored = true
+        humanoidRootPart.CFrame = destination.CFrame * CFrame.new(0, 4, 0)
+        activateProximityPrompt(destination)
+        humanoidRootPart.Anchored = false
+    end
+end
+
+getgenvs().loopConnection = runService.Heartbeat:Connect(function()
+    if getgenvs().bringEnabled then
+        bringObjectsToPlayer()
+    end
+    if getgenvs().teleEnabled then
+        for _, pray in pairs(workspace:GetChildren()) do
+            if pray.Name == "Pray" then
+                teleportToPosition(pray)
+            end
+        end
+        for _, gwaGwa in pairs(workspace:GetChildren()) do
+            if gwaGwa.Name == "GwaGwa" then
+                teleportToPosition(gwaGwa)
+            end
+        end
+    end
+end)
