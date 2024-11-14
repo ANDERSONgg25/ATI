@@ -1,6 +1,5 @@
-getgenvs().teleEnabled = false
-getgenvs().bringEnabled = false
-getgenvs().loopConnection = nil
+getgenv().bringEnabled = false
+getgenv().teleEnabled = false
 
 local player = game.Players.LocalPlayer
 local humanoidRootPart = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
@@ -37,19 +36,15 @@ local function teleportToPosition(destination)
     end
 end
 
-getgenvs().loopConnection = runService.Heartbeat:Connect(function()
-    if getgenvs().bringEnabled then
+runService.Heartbeat:Connect(function()
+    if getgenv().bringEnabled then
         bringObjectsToPlayer()
     end
-    if getgenvs().teleEnabled then
-        for _, pray in pairs(workspace:GetChildren()) do
-            if pray.Name == "Pray" then
-                teleportToPosition(pray)
-            end
-        end
-        for _, gwaGwa in pairs(workspace:GetChildren()) do
-            if gwaGwa.Name == "GwaGwa" then
-                teleportToPosition(gwaGwa)
+    
+    if getgenv().teleEnabled then
+        for _, obj in pairs(workspace:GetChildren()) do
+            if obj.Name == "Pray" or obj.Name == "GwaGwa" then
+                teleportToPosition(obj)
             end
         end
     end
