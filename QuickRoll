@@ -1,4 +1,4 @@
-local Players = game:GetService("Players")
+        local Players = game:GetService("Players")
         local player = Players.LocalPlayer
 
         if not player:FindFirstChild("QuickRoll") then
@@ -22,4 +22,3 @@ local Players = game:GetService("Players")
                 quickRollFrame.Lock:Destroy()
             end
         end
-    end
