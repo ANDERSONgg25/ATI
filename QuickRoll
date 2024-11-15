@@ -1,0 +1,25 @@
+local Players = game:GetService("Players")
+        local player = Players.LocalPlayer
+
+        if not player:FindFirstChild("QuickRoll") then
+            local quickRoll = Instance.new("BoolValue")
+            quickRoll.Name = "QuickRoll"
+            quickRoll.Value = false
+            quickRoll.Parent = player
+        end
+
+        local quickRollFrame = player:FindFirstChild("PlayerGui")
+            and player.PlayerGui:FindFirstChild("Menu")
+            and player.PlayerGui.Menu:FindFirstChild("Roll")
+            and player.PlayerGui.Menu.Roll:FindFirstChild("Frame")
+            and player.PlayerGui.Menu.Roll.Frame:FindFirstChild("QuickRoll")
+
+        if quickRollFrame then
+            if quickRollFrame:FindFirstChild("a") then
+                quickRollFrame.a:Destroy()
+            end
+            if quickRollFrame:FindFirstChild("Lock") then
+                quickRollFrame.Lock:Destroy()
+            end
+        end
+    end
