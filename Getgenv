@@ -25,14 +25,9 @@ local function bringObjectsToPlayer()
 end
 
 local function teleportToPosition(destination)
-    local character = player.Character
-    local humanoidRootPart = character and character:FindFirstChild("HumanoidRootPart")
-    
     if humanoidRootPart then
-        humanoidRootPart.Anchored = true
         humanoidRootPart.CFrame = destination.CFrame * CFrame.new(0, 4, 0)
         activateProximityPrompt(destination)
-        humanoidRootPart.Anchored = false
     end
 end
 
