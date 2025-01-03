@@ -4,10 +4,12 @@ getgenv().bringEnabled = false
 getgenv().tpEnabled = false
 getgenv().bringLoop = nil
 getgenv().tpLoop = nil
+
 getgenv().getHumanoidRootPart = function()
     local character = getgenv().player.Character or getgenv().player.CharacterAdded:Wait()
     return character:FindFirstChild("HumanoidRootPart")
 end
+
 getgenv().activateProximityPrompt = function(object)
     for _, proximityPrompt in pairs(object:GetDescendants()) do
         if proximityPrompt:IsA("ProximityPrompt") then
@@ -15,6 +17,7 @@ getgenv().activateProximityPrompt = function(object)
         end
     end
 end
+
 getgenv().bringObjectsToPlayer = function()
     local humanoidRootPart = getgenv().getHumanoidRootPart()
     if humanoidRootPart then
@@ -26,6 +29,7 @@ getgenv().bringObjectsToPlayer = function()
         end
     end
 end
+
 getgenv().teleportToObjects = function()
     local humanoidRootPart = getgenv().getHumanoidRootPart()
     if humanoidRootPart then
