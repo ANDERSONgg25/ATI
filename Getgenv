@@ -1,42 +1,38 @@
+getgenv().player = game.Players.LocalPlayer
+getgenv().runService = game:GetService("RunService")
 getgenv().bringEnabled = false
 getgenv().tpEnabled = false
-
-local player = game.Players.LocalPlayer
-local runService = game:GetService("RunService")
-local bringLoop, tpLoop
-
-local function getHumanoidRootPart()
-    local character = player.Character or player.CharacterAdded:Wait()
+getgenv().bringLoop = nil
+getgenv().tpLoop = nil
+getgenv().getHumanoidRootPart = function()
+    local character = getgenv().player.Character or getgenv().player.CharacterAdded:Wait()
     return character:FindFirstChild("HumanoidRootPart")
 end
-
-local function activateProximityPrompt(object)
+getgenv().activateProximityPrompt = function(object)
     for _, proximityPrompt in pairs(object:GetDescendants()) do
         if proximityPrompt:IsA("ProximityPrompt") then
             fireproximityprompt(proximityPrompt)
         end
     end
 end
-
-local function bringObjectsToPlayer()
-    local humanoidRootPart = getHumanoidRootPart()
+getgenv().bringObjectsToPlayer = function()
+    local humanoidRootPart = getgenv().getHumanoidRootPart()
     if humanoidRootPart then
         for _, obj in pairs(workspace.Items:GetChildren()) do
             if obj:IsA("MeshPart") and obj:FindFirstChild("Attachment") then
                 obj.CFrame = humanoidRootPart.CFrame * CFrame.new(0, 9, 0)
-                activateProximityPrompt(obj)
+                getgenv().activateProximityPrompt(obj)
             end
         end
     end
 end
-
-local function teleportToObjects()
-    local humanoidRootPart = getHumanoidRootPart()
+getgenv().teleportToObjects = function()
+    local humanoidRootPart = getgenv().getHumanoidRootPart()
     if humanoidRootPart then
         for _, obj in pairs(workspace.Items:GetChildren()) do
             if obj:IsA("MeshPart") and obj:FindFirstChild("Attachment") then
                 humanoidRootPart.CFrame = obj.CFrame * CFrame.new(0, 4, 0)
-                activateProximityPrompt(obj)
+                getgenv().activateProximityPrompt(obj)
             end
         end
     end
