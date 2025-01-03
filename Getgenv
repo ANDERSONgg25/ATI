@@ -35,7 +35,7 @@ getgenv().teleportToObjects = function()
     if humanoidRootPart then
         for _, obj in pairs(workspace.Items:GetChildren()) do
             if obj:IsA("MeshPart") and obj:FindFirstChild("Attachment") then
-                humanoidRootPart.CFrame = obj.CFrame * CFrame.new(0, 4, 0)
+                humanoidRootPart.CFrame = obj.CFrame * CFrame.new(0, 6, 0)
                 getgenv().activateProximityPrompt(obj)
             end
         end
