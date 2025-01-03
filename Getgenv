@@ -1,9 +1,14 @@
 getgenv().bringEnabled = false
-getgenv().teleEnabled = false
+getgenv().tpEnabled = false
 
 local player = game.Players.LocalPlayer
-local humanoidRootPart = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
 local runService = game:GetService("RunService")
+local bringLoop, tpLoop
+
+local function getHumanoidRootPart()
+    local character = player.Character or player.CharacterAdded:Wait()
+    return character:FindFirstChild("HumanoidRootPart")
+end
 
 local function activateProximityPrompt(object)
     for _, proximityPrompt in pairs(object:GetDescendants()) do
@@ -14,9 +19,10 @@ local function activateProximityPrompt(object)
 end
 
 local function bringObjectsToPlayer()
+    local humanoidRootPart = getHumanoidRootPart()
     if humanoidRootPart then
-        for _, obj in pairs(workspace:GetChildren()) do
-            if obj.Name == "Pray" or obj.Name == "GwaGwa" then
+        for _, obj in pairs(workspace.Items:GetChildren()) do
+            if obj:IsA("MeshPart") and obj:FindFirstChild("Attachment") then
                 obj.CFrame = humanoidRootPart.CFrame * CFrame.new(0, 9, 0)
                 activateProximityPrompt(obj)
             end
@@ -24,23 +30,14 @@ local function bringObjectsToPlayer()
     end
 end
 
-local function teleportToPosition(destination)
+local function teleportToObjects()
+    local humanoidRootPart = getHumanoidRootPart()
     if humanoidRootPart then
-        humanoidRootPart.CFrame = destination.CFrame * CFrame.new(0, 4, 0)
-        activateProximityPrompt(destination)
-    end
-end
-
-runService.Heartbeat:Connect(function()
-    if getgenv().bringEnabled then
-        bringObjectsToPlayer()
-    end
-    
-    if getgenv().teleEnabled then
-        for _, obj in pairs(workspace:GetChildren()) do
-            if obj.Name == "Pray" or obj.Name == "GwaGwa" then
-                teleportToPosition(obj)
+        for _, obj in pairs(workspace.Items:GetChildren()) do
+            if obj:IsA("MeshPart") and obj:FindFirstChild("Attachment") then
+                humanoidRootPart.CFrame = obj.CFrame * CFrame.new(0, 4, 0)
+                activateProximityPrompt(obj)
             end
         end
     end
-end)
+end
