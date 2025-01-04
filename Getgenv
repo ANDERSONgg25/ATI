@@ -1,5 +1,6 @@
 getgenv().player = game.Players.LocalPlayer
 getgenv().runService = game:GetService("RunService")
+getgenv().tweenService = game:GetService("TweenService")
 getgenv().bringEnabled = false
 getgenv().tpEnabled = false
 getgenv().bringLoop = nil
@@ -23,7 +24,11 @@ getgenv().bringObjectsToPlayer = function()
     if humanoidRootPart then
         for _, obj in pairs(workspace.Items:GetChildren()) do
             if obj:IsA("MeshPart") and obj:FindFirstChild("Attachment") then
-                obj.CFrame = humanoidRootPart.CFrame * CFrame.new(0, 9, 0)
+                local targetCFrame = humanoidRootPart.CFrame * CFrame.new(0, 9, 0)
+                local tweenInfo = TweenInfo.new(1, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
+                local tween = getgenv().tweenService:Create(obj, tweenInfo, {CFrame = targetCFrame})
+                tween:Play()
+                tween.Completed:Wait()
                 getgenv().activateProximityPrompt(obj)
             end
         end
@@ -35,7 +40,11 @@ getgenv().teleportToObjects = function()
     if humanoidRootPart then
         for _, obj in pairs(workspace.Items:GetChildren()) do
             if obj:IsA("MeshPart") and obj:FindFirstChild("Attachment") then
-                humanoidRootPart.CFrame = obj.CFrame * CFrame.new(0, 4, 0)
+                local targetCFrame = obj.CFrame * CFrame.new(0, 4, 0)
+                local tweenInfo = TweenInfo.new(1, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
+                local tween = getgenv().tweenService:Create(humanoidRootPart, tweenInfo, {CFrame = targetCFrame})
+                tween:Play()
+                tween.Completed:Wait()
                 getgenv().activateProximityPrompt(obj)
             end
         end
