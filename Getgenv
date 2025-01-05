@@ -25,7 +25,7 @@ getgenv().bringObjectsToPlayer = function()
         for _, obj in pairs(workspace.Items:GetChildren()) do
             if obj:IsA("MeshPart") and obj:FindFirstChild("Attachment") then
                 local targetCFrame = humanoidRootPart.CFrame * CFrame.new(0, 9, 0)
-                local tweenInfo = TweenInfo.new(00.1, Enum.EasingStyle.Linear, Enum.EasingDirection.In)
+                local tweenInfo = TweenInfo.new(000.1, Enum.EasingStyle.Linear, Enum.EasingDirection.In)
                 local tween = getgenv().tweenService:Create(obj, tweenInfo, {CFrame = targetCFrame})
                 tween:Play()
                 tween.Completed:Wait()
@@ -41,7 +41,7 @@ getgenv().teleportToObjects = function()
         for _, obj in pairs(workspace.Items:GetChildren()) do
             if obj:IsA("MeshPart") and obj:FindFirstChild("Attachment") then
                 local targetCFrame = obj.CFrame * CFrame.new(0, 4, 0)
-                local tweenInfo = TweenInfo.new(00.1, Enum.EasingStyle.Linear, Enum.EasingDirection.In)
+                local tweenInfo = TweenInfo.new(000.1, Enum.EasingStyle.Linear, Enum.EasingDirection.In)
                 local tween = getgenv().tweenService:Create(humanoidRootPart, tweenInfo, {CFrame = targetCFrame})
                 tween:Play()
                 tween.Completed:Wait()
