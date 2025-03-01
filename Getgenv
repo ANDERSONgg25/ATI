@@ -5,6 +5,59 @@ getgenv().bringEnabled = false
 getgenv().tpEnabled = false
 getgenv().bringLoop = nil
 getgenv().tpLoop = nil
+getgenv().ToggleStop = false
+getgenv().ToggleClaim = false
+getgenv().Players = game:GetService("Players")
+getgenv().ReplicatedStorage = game:GetService("ReplicatedStorage")
+getgenv().GuiService = game:GetService("GuiService")
+getgenv().VirtualInputManager = game:GetService("VirtualInputManager")
+
+getgenv().getGwaMachine = function()
+    return workspace:FindFirstChild("NPC") and 
+           workspace.NPC:FindFirstChild("GwaMeachine") and 
+           workspace.NPC.GwaMeachine:FindFirstChild("Handle")
+end
+
+getgenv().getStatus = function()
+    local gwaMachine = getgenv().getGwaMachine()
+    if gwaMachine then
+        local billboardGui = gwaMachine:FindFirstChild("UI") and gwaMachine.UI:FindFirstChild("Name")
+        local statusLabel = billboardGui and billboardGui:FindFirstChild("Status")
+        return statusLabel and statusLabel:IsA("TextLabel") and statusLabel.Text or nil
+    end
+end
+
+getgenv().stopMiner = function()
+    while getgenv().ToggleStop do
+        if getgenv().getStatus() == "Finished" then
+            getgenv().ReplicatedStorage.Networks.ServerF:InvokeServer({{"StopLunarisMiner"}})
+        end
+        task.wait(1)
+    end
+end
+
+getgenv().autoClaim = function()
+    while getgenv().ToggleClaim do
+        if getgenv().getStatus() == "Finished" then
+            local playerGui = getgenv().Players.LocalPlayer:FindFirstChild("PlayerGui")
+            local machineMain = playerGui and playerGui:FindFirstChild("Main") and 
+                                playerGui.Main.Windows:FindFirstChild("MachineMain")
+            if machineMain then
+                machineMain.Visible = true
+                local claimButton = machineMain:FindFirstChild("Lunaris") and 
+                                    machineMain.Lunaris.Running.Claim:FindFirstChild("TextButton")
+                if claimButton then
+                    getgenv().GuiService.SelectedObject = claimButton
+                    task.wait(0.1)
+                    getgenv().VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.Return, false, game)
+                    task.wait(0.1)
+                    getgenv().VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.Return, false, game)
+                end
+            end
+        end
+        task.wait(1)
+    end
+end
 
 getgenv().getHumanoidRootPart = function()
     local character = getgenv().player.Character or getgenv().player.CharacterAdded:Wait()
