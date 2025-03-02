@@ -5,7 +5,6 @@ getgenv().bringEnabled = false
 getgenv().tpEnabled = false
 getgenv().bringLoop = nil
 getgenv().tpLoop = nil
-getgenv().noclipLoop = nil
 getgenv().ToggleStop = false
 getgenv().ToggleClaim = false
 getgenv().Players = game:GetService("Players")
@@ -90,60 +89,16 @@ getgenv().bringObjectsToPlayer = function()
 end
 
 getgenv().teleportToObjects = function()
-    getgenv().tpEnabled = not getgenv().tpEnabled
-    
-    if getgenv().tpEnabled then
-        getgenv().noclip(true) 
-        getgenv().tpLoop = task.spawn(function()
-            while getgenv().tpEnabled do
-                local humanoidRootPart = getgenv().getHumanoidRootPart()
-                if humanoidRootPart then
-                    for _, obj in pairs(workspace.Items:GetChildren()) do
-                        if obj:IsA("MeshPart") and obj:FindFirstChild("Attachment") then
-                            local targetCFrame = obj.CFrame * CFrame.new(0, 4, 0)
-                            local tweenInfo = TweenInfo.new(00.01, Enum.EasingStyle.Linear, Enum.EasingDirection.In)
-                            local tween = getgenv().tweenService:Create(humanoidRootPart, tweenInfo, {CFrame = targetCFrame})
-                            tween:Play()
-                            tween.Completed:Wait()
-                            getgenv().activateProximityPrompt(obj)
-                        end
-                    end
-                end
-                task.wait(0.1)
-            end
-        end)
-    else
-        getgenv().noclip(false)
-        if getgenv().tpLoop then
-            task.cancel(getgenv().tpLoop)
-            getgenv().tpLoop = nil
-        end
-    end
-end
-
-getgenv().noclip = function(state)
-    if state then
-        getgenv().noclipLoop = getgenv().runService.Stepped:Connect(function()
-            local character = getgenv().player.Character
-            if character then
-                for _, part in pairs(character:GetDescendants()) do
-                    if part:IsA("BasePart") then
-                        part.CanCollide = false
-                    end
-                end
-            end
-        end)
-    else
-        if getgenv().noclipLoop then
-            getgenv().noclipLoop:Disconnect()
-            getgenv().noclipLoop = nil
-        end
-        local character = getgenv().player.Character
-        if character then
-            for _, part in pairs(character:GetDescendants()) do
-                if part:IsA("BasePart") then
-                    part.CanCollide = true
-                end
+    local humanoidRootPart = getgenv().getHumanoidRootPart()
+    if humanoidRootPart then
+        for _, obj in pairs(workspace.Items:GetChildren()) do
+            if obj:IsA("MeshPart") and obj:FindFirstChild("Attachment") then
+                local targetCFrame = obj.CFrame * CFrame.new(0, 4, 0)
+                local tweenInfo = TweenInfo.new(00.01, Enum.EasingStyle.Linear, Enum.EasingDirection.In)
+                local tween = getgenv().tweenService:Create(humanoidRootPart, tweenInfo, {CFrame = targetCFrame})
+                tween:Play()
+                tween.Completed:Wait()
+                getgenv().activateProximityPrompt(obj)
             end
         end
     end
