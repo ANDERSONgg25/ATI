@@ -6,7 +6,6 @@ getgenv().tpEnabled = false
 getgenv().bringLoop = nil
 getgenv().tpLoop = nil
 getgenv().noclipLoop = nil
-
 getgenv().ToggleStop = false
 getgenv().ToggleClaim = false
 getgenv().Players = game:GetService("Players")
