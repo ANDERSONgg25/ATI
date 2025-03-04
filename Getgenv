@@ -5,7 +5,6 @@ getgenv().bringEnabled = false
 getgenv().tpEnabled = false
 getgenv().bringLoop = nil
 getgenv().tpLoop = nil
-getgenv().ToggleStop = false
 getgenv().ToggleClaim = false
 getgenv().Players = game:GetService("Players")
 getgenv().ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -24,15 +23,6 @@ getgenv().getStatus = function()
         local billboardGui = gwaMachine:FindFirstChild("UI") and gwaMachine.UI:FindFirstChild("Name")
         local statusLabel = billboardGui and billboardGui:FindFirstChild("Status")
         return statusLabel and statusLabel:IsA("TextLabel") and statusLabel.Text or nil
-    end
-end
-
-getgenv().stopMiner = function()
-    while getgenv().ToggleStop do
-        if getgenv().getStatus() == "Finished" then
-            getgenv().ReplicatedStorage.Networks.ServerF:InvokeServer({{"StopLunarisMiner"}})
-        end
-        task.wait(1)
     end
 end
 
