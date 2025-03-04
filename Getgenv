@@ -10,6 +10,23 @@ getgenv().Players = game:GetService("Players")
 getgenv().ReplicatedStorage = game:GetService("ReplicatedStorage")
 getgenv().GuiService = game:GetService("GuiService")
 getgenv().VirtualInputManager = game:GetService("VirtualInputManager")
+getgenv().player = game:GetService("Players").LocalPlayer
+getgenv().playerGui = getgenv().player:FindFirstChild("PlayerGui")
+
+if getgenv().playerGui then
+    getgenv().machineMain = getgenv().playerGui.Main.Windows:FindFirstChild("MachineMain")
+    if getgenv().machineMain then
+        getgenv().gwaRoll = getgenv().machineMain:FindFirstChild("GwaRoll")
+        if getgenv().gwaRoll then
+            getgenv().gwaRoll.Visible = false
+        end
+
+        getgenv().lunaris = getgenv().machineMain:FindFirstChild("Lunaris")
+        if getgenv().lunaris then
+            getgenv().lunaris.Visible = true
+        end
+    end
+end
 
 getgenv().getGwaMachine = function()
     return workspace:FindFirstChild("NPC") and 
@@ -29,13 +46,9 @@ end
 getgenv().autoClaim = function()
     while getgenv().ToggleClaim do
         if getgenv().getStatus() == "Finished" then
-            local playerGui = getgenv().Players.LocalPlayer:FindFirstChild("PlayerGui")
-            local machineMain = playerGui and playerGui:FindFirstChild("Main") and 
-                                playerGui.Main.Windows:FindFirstChild("MachineMain")
-            if machineMain then
-                machineMain.Visible = true
-                local claimButton = machineMain:FindFirstChild("Lunaris") and 
-                                    machineMain.Lunaris.Running.Claim:FindFirstChild("TextButton")
+            if getgenv().machineMain then
+                getgenv().machineMain.Visible = true
+                local claimButton = getgenv().lunaris and getgenv().lunaris.Running.Claim:FindFirstChild("TextButton")
                 if claimButton then
                     getgenv().GuiService.SelectedObject = claimButton
                     task.wait(0.1)
