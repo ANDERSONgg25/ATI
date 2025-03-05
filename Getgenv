@@ -10,7 +10,6 @@ getgenv().Players = game:GetService("Players")
 getgenv().ReplicatedStorage = game:GetService("ReplicatedStorage")
 getgenv().GuiService = game:GetService("GuiService")
 getgenv().VirtualInputManager = game:GetService("VirtualInputManager")
-getgenv().player = game:GetService("Players").LocalPlayer
 getgenv().playerGui = getgenv().player:FindFirstChild("PlayerGui")
 
 if getgenv().playerGui then
