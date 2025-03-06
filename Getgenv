@@ -1,92 +1,60 @@
 getgenv().player = game.Players.LocalPlayer
 getgenv().runService = game:GetService("RunService")
 getgenv().tweenService = game:GetService("TweenService")
-getgenv().bringEnabled = false
-getgenv().tpEnabled = false
-getgenv().bringLoop = nil
-getgenv().tpLoop = nil
-getgenv().ToggleClaim = false
 getgenv().Players = game:GetService("Players")
 getgenv().ReplicatedStorage = game:GetService("ReplicatedStorage")
 getgenv().GuiService = game:GetService("GuiService")
 getgenv().VirtualInputManager = game:GetService("VirtualInputManager")
-getgenv().playerGui = getgenv().player:FindFirstChild("PlayerGui")
 getgenv().UserInputService = game:GetService("UserInputService")
+
+getgenv().bringEnabled = false
+getgenv().tpEnabled = false
+getgenv().ToggleClaim = false
 getgenv().AntiBug = false
+
+getgenv().playerGui = getgenv().player:FindFirstChild("PlayerGui")
+if getgenv().playerGui then
+    getgenv().machineMain = getgenv().playerGui:FindFirstChild("Main") and getgenv().playerGui.Main.Windows:FindFirstChild("MachineMain")
+    if getgenv().machineMain then
+        getgenv().gwaRoll = getgenv().machineMain:FindFirstChild("GwaRoll")
+        getgenv().lunaris = getgenv().machineMain:FindFirstChild("Lunaris")
+
+        if getgenv().gwaRoll then getgenv().gwaRoll.Visible = false end
+        if getgenv().lunaris then getgenv().lunaris.Visible = true end
+    end
+end
 
 getgenv().toggleAntiBugs = function(value)
     getgenv().AntiBug = value
-
     while getgenv().AntiBug do
-        local player = game:GetService("Players").LocalPlayer
-        local gui = player:FindFirstChild("PlayerGui")
-
-        if gui then
-            local machineMain = gui:FindFirstChild("Main") and gui.Main:FindFirstChild("Windows") and gui.Main.Windows:FindFirstChild("MachineMain")
-            if machineMain then
-                local lunaris = machineMain:FindFirstChild("Lunaris")
-                local gwaRoll = machineMain:FindFirstChild("GwaRoll")
-
-                if lunaris then
-                    lunaris.Visible = true
-
-                    local claimButton = lunaris:FindFirstChild("Running") and lunaris.Running:FindFirstChild("Claim") and lunaris.Running.Claim:FindFirstChild("TextButton")
-                    
-                    if getgenv().GuiService.SelectedObject ~= claimButton then
-                        getgenv().GuiService.SelectedObject = nil
-                    end
-                end
-                if gwaRoll then
-                    gwaRoll.Visible = false
-                end
-            end
+        if getgenv().machineMain then
+            if getgenv().lunaris then getgenv().lunaris.Visible = true end
+            if getgenv().gwaRoll then getgenv().gwaRoll.Visible = false end
         end
-
         task.wait(0.5)
     end
 end
 
-if getgenv().playerGui then
-    getgenv().machineMain = getgenv().playerGui.Main.Windows:FindFirstChild("MachineMain")
-    if getgenv().machineMain then
-        getgenv().gwaRoll = getgenv().machineMain:FindFirstChild("GwaRoll")
-        if getgenv().gwaRoll then
-            getgenv().gwaRoll.Visible = false
-        end
-
-        getgenv().lunaris = getgenv().machineMain:FindFirstChild("Lunaris")
-        if getgenv().lunaris then
-            getgenv().lunaris.Visible = true
-        end
-    end
-end
-
 getgenv().getGwaMachine = function()
-    return workspace:FindFirstChild("NPC") and 
-           workspace.NPC:FindFirstChild("GwaMeachine") and 
-           workspace.NPC.GwaMeachine:FindFirstChild("Handle")
+    return workspace:FindFirstChild("NPC") and workspace.NPC:FindFirstChild("GwaMeachine") and workspace.NPC.GwaMeachine:FindFirstChild("Handle")
 end
 
 getgenv().getStatus = function()
     local gwaMachine = getgenv().getGwaMachine()
     if gwaMachine then
-        local billboardGui = gwaMachine:FindFirstChild("UI") and gwaMachine.UI:FindFirstChild("Name")
-        local statusLabel = billboardGui and billboardGui:FindFirstChild("Status")
+        local statusLabel = gwaMachine:FindFirstChild("UI") and gwaMachine.UI:FindFirstChild("Name") and gwaMachine.UI.Name:FindFirstChild("Status")
         return statusLabel and statusLabel:IsA("TextLabel") and statusLabel.Text or nil
     end
 end
 
 getgenv().autoClaim = function()
     while getgenv().ToggleClaim do
-        if getgenv().getStatus() == "Finished" then
-            if getgenv().machineMain then
-                getgenv().machineMain.Visible = true
-                local claimButton = getgenv().lunaris and getgenv().lunaris.Running.Claim:FindFirstChild("TextButton")
-                if claimButton then
-                    getgenv().GuiService.SelectedObject = claimButton
-                    getgenv().VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.Return, false, game)
-                    getgenv().VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.Return, false, game)
-                end
+        if getgenv().getStatus() == "Finished" and getgenv().machineMain then
+            local claimButton = getgenv().lunaris and getgenv().lunaris.Running and getgenv().lunaris.Running:FindFirstChild("Claim") and getgenv().lunaris.Running.Claim:FindFirstChild("TextButton")
+            if claimButton then
+                getgenv().GuiService.SelectedObject = claimButton
+                getgenv().VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.Return, false, game)
+                getgenv().VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.Return, false, game)
             end
         end
         task.wait(0.5)
@@ -95,11 +63,11 @@ end
 
 getgenv().getHumanoidRootPart = function()
     local character = getgenv().player.Character or getgenv().player.CharacterAdded:Wait()
-    return character:FindFirstChild("HumanoidRootPart")
+    return character and character:FindFirstChild("HumanoidRootPart")
 end
 
 getgenv().activateProximityPrompt = function(object)
-    for _, proximityPrompt in pairs(object:GetDescendants()) do
+    for _, proximityPrompt in ipairs(object:GetDescendants()) do
         if proximityPrompt:IsA("ProximityPrompt") then
             fireproximityprompt(proximityPrompt)
         end
@@ -109,11 +77,10 @@ end
 getgenv().bringObjectsToPlayer = function()
     local humanoidRootPart = getgenv().getHumanoidRootPart()
     if humanoidRootPart then
-        for _, obj in pairs(workspace.Items:GetChildren()) do
+        for _, obj in ipairs(workspace.Items:GetChildren()) do
             if obj:IsA("MeshPart") and obj:FindFirstChild("Attachment") then
                 local targetCFrame = humanoidRootPart.CFrame * CFrame.new(0, 9, 0)
-                local tweenInfo = TweenInfo.new(00.01, Enum.EasingStyle.Linear, Enum.EasingDirection.In)
-                local tween = getgenv().tweenService:Create(obj, tweenInfo, {CFrame = targetCFrame})
+                local tween = getgenv().tweenService:Create(obj, TweenInfo.new(0.01, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {CFrame = targetCFrame})
                 tween:Play()
                 tween.Completed:Wait()
                 getgenv().activateProximityPrompt(obj)
@@ -125,7 +92,7 @@ end
 getgenv().teleportToObjects = function()
     local humanoidRootPart = getgenv().getHumanoidRootPart()
     if humanoidRootPart then
-        for _, obj in pairs(workspace.Items:GetChildren()) do
+        for _, obj in ipairs(workspace.Items:GetChildren()) do
             if obj:IsA("MeshPart") and obj:FindFirstChild("Attachment") then
                 local targetCFrame = obj.CFrame * CFrame.new(0, 4, 0)
 
@@ -135,9 +102,7 @@ getgenv().teleportToObjects = function()
                 bodyPosition.D = 10
                 bodyPosition.P = 30000
 
-                local tweenInfo = TweenInfo.new(math.huge, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-                local tween = getgenv().tweenService:Create(humanoidRootPart, tweenInfo, {CFrame = targetCFrame})
-
+                local tween = getgenv().tweenService:Create(humanoidRootPart, TweenInfo.new(math.huge, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {CFrame = targetCFrame})
                 tween:Play()
                 tween.Completed:Wait()
 
