@@ -11,6 +11,40 @@ getgenv().ReplicatedStorage = game:GetService("ReplicatedStorage")
 getgenv().GuiService = game:GetService("GuiService")
 getgenv().VirtualInputManager = game:GetService("VirtualInputManager")
 getgenv().playerGui = getgenv().player:FindFirstChild("PlayerGui")
+getgenv().UserInputService = game:GetService("UserInputService")
+getgenv().AntiBug = false
+
+getgenv().toggleAntiBugs = function(value)
+    getgenv().AntiBug = value
+
+    while getgenv().AntiBug do
+        local player = game:GetService("Players").LocalPlayer
+        local gui = player:FindFirstChild("PlayerGui")
+
+        if gui then
+            local machineMain = gui:FindFirstChild("Main") and gui.Main:FindFirstChild("Windows") and gui.Main.Windows:FindFirstChild("MachineMain")
+            if machineMain then
+                local lunaris = machineMain:FindFirstChild("Lunaris")
+                local gwaRoll = machineMain:FindFirstChild("GwaRoll")
+
+                if lunaris then
+                    lunaris.Visible = true
+
+                    local claimButton = lunaris:FindFirstChild("Running") and lunaris.Running:FindFirstChild("Claim") and lunaris.Running.Claim:FindFirstChild("TextButton")
+                    
+                    if getgenv().GuiService.SelectedObject ~= claimButton then
+                        getgenv().GuiService.SelectedObject = nil
+                    end
+                end
+                if gwaRoll then
+                    gwaRoll.Visible = false
+                end
+            end
+        end
+
+        task.wait(0.5)
+    end
+end
 
 if getgenv().playerGui then
     getgenv().machineMain = getgenv().playerGui.Main.Windows:FindFirstChild("MachineMain")
