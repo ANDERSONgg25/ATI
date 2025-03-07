@@ -128,13 +128,6 @@ getgenv().teleportToObjects = function()
         for _, obj in pairs(workspace.Items:GetChildren()) do
             if obj:IsA("MeshPart") and obj:FindFirstChild("Attachment") then
                 local targetCFrame = obj.CFrame * CFrame.new(0, 4, 0)
-
-                local bodyPosition = Instance.new("BodyPosition", humanoidRootPart)
-                bodyPosition.Position = targetCFrame.Position
-                bodyPosition.MaxForce = Vector3.new(1e100, 1e100, 1e100)
-                bodyPosition.D = 10
-                bodyPosition.P = 30000
-
                 local tweenInfo = TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
                 local tween = getgenv().tweenService:Create(humanoidRootPart, tweenInfo, {CFrame = targetCFrame})
 
@@ -142,7 +135,6 @@ getgenv().teleportToObjects = function()
                 tween.Completed:Wait()
 
                 getgenv().activateProximityPrompt(obj)
-                bodyPosition:Destroy()
             end
         end
     end
