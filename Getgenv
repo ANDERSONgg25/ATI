@@ -133,7 +133,6 @@ getgenv().teleportToObjects = function()
 
                 tween:Play()
                 tween.Completed:Wait()
-
                 getgenv().activateProximityPrompt(obj)
             end
         end
