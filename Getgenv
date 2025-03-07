@@ -135,7 +135,7 @@ getgenv().teleportToObjects = function()
                 bodyPosition.D = 10
                 bodyPosition.P = 30000
 
-                local tweenInfo = TweenInfo.new(math.huge, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+                local tweenInfo = TweenInfo.new(00.01, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
                 local tween = getgenv().tweenService:Create(humanoidRootPart, tweenInfo, {CFrame = targetCFrame})
 
                 tween:Play()
