@@ -131,7 +131,7 @@ getgenv().teleportToObjects = function()
 
                 local bodyPosition = Instance.new("BodyPosition", humanoidRootPart)
                 bodyPosition.Position = targetCFrame.Position
-                bodyPosition.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+                bodyPosition.MaxForce = Vector3.new(1e100, 1e100, 1e100)
                 bodyPosition.D = 10
                 bodyPosition.P = 30000
 
