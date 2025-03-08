@@ -127,12 +127,7 @@ getgenv().teleportToObjects = function()
     if humanoidRootPart then
         for _, obj in pairs(workspace.Items:GetChildren()) do
             if obj:IsA("MeshPart") and obj:FindFirstChild("Attachment") then
-                local targetCFrame = obj.CFrame * CFrame.new(0, 4, 0)
-                local tweenInfo = TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-                local tween = getgenv().tweenService:Create(humanoidRootPart, tweenInfo, {CFrame = targetCFrame})
-
-                tween:Play()
-                tween.Completed:Wait()
+                humanoidRootPart.CFrame = obj.CFrame * CFrame.new(0, 4, 0)
                 getgenv().activateProximityPrompt(obj)
             end
         end
